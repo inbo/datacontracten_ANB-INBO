@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/inbo/datacontracten_ANB-INBO/afschot/v1/afschot.schema.json",
+
+  "type": "object",
+  "title": "MeldingAfschot",
+  "description": "Registratie van een afschotmelding",
+  "additionalProperties": true,
+  "properties": {
+    "MeldingGuid": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unieke identifier van de melding (UUID v4)",
+      "examples": ["4ed161b5-0d3c-4f06-8381-5f14678e13da"]
+    },
+    "MeldingAfschotId": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Interne database-ID van de afschotmelding",
+      "examples": [12345]
+    },
+    "Jaartal": {
+      "type": "integer",
+      "minimum": 2000,
+      "maximum": 2100,
+      "description": "Jaar waarin het afschot gebeurde",
+      "examples": [2025]
+    },
+    "OndertekeningsDatum": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Datum en tijdstip van ondertekening (ISO 8601 met tijdzone-offset)",
+      "examples": ["2025-11-14T13:26:20.406+00:00"]
+    },
+    "OndertekenaarAchternaam": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Achternaam van de ondertekenaar",
+      "examples": ["De smet"]
+    },
+    "OndertekenaarVoornaam": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Voornaam van de ondertekenaar",
+      "examples": ["Jan"]
+    },
+    "Ondertekend": {
+      "type": "boolean",
+      "description": "Geeft aan of de melding ondertekend is",
+      "examples": [true]
+    },
+    "JachtMehtode": {
+      "type": "string",
+      "description": "Manier waarop gejaagd wordt (veldnaam bevat typfout: 'Mehtode' i.p.v. 'Methode')",
+      "examples": ["DRUKJACHT"]
+    },
+    "AfschotPlanNummer": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}-[A-Z]{2}-\\d{4}-\\d{4}$",
+      "description": "Referentienummer van het afschotplan",
+      "examples": ["VB-WZ-2025-9999"]
+    }
+    ,
+    "WettelijkKader": {
+      "type": "string",
+      "description": "Wettelijk kader waarbinnen de jacht plaatsvindt",
+      "examples": ["GEWONEJACHT"]
+    },
+    "MeldingAfschotDier": {
+      "type": "string",
+      "description": "Soortcode van het afgeschoten dier",
+      "examples": ["EZWN"]
+    },
+    "Datum": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Datum en tijdstip van het afschot (ISO 8601 met tijdzone-offset)",
+      "examples": ["2025-02-06T17:20:28.137+00:00"]
+    },
+    "Tijdstip": {
+      "type": "string",
+      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$",
+      "description": "Tijdstip van het afschot (HH:MM:SS, 24-uursnotatie)",
+      "examples": ["14:30:00"]
+    },
+    "GemeenteNaam": {
+      "type": ["string", "null"],
+      "description": "Naam van de gemeente waar het afschot plaatsvond",
+      "examples": ["Gent"]
+    },
+    "PostCode": {
+      "type": "string",
+      "pattern": "^\\d{4}$",
+      "description": "Belgische postcode (4 cijfers)",
+      "examples": ["3040"]
+    },
+    "GemeenteNisCodes": {
+      "type": "array",
+      "description": "NIS-codes van de betrokken gemeente(n); elementen mogen null zijn",
+      "items": {
+        "type": ["string", "null"],
+        "pattern": "^\\d{5}$"
+      },
+      "examples": [["24135"], [null]]
+    },
+    "LabelNummer": {
+      "type": "string",
+      "pattern": "^ANB \\d{4} [A-Z ]+ \\d+$",
+      "description": "Labelnummer toegewezen aan het dier door ANB",
+      "examples": ["ANB 2025 WILD ZWIJN 999999"]
+    },
+    "AantalDieren": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "description": "Aantal afgeschoten dieren in deze melding",
+      "examples": [3]
+    },
+    "LeeftijdDier": {
+      "type": "string",
+      "description": "Leeftijdscategorie van het dier als code (verwijst naar externe codelijst)",
+      "examples": ["347"]
+    },
+    "GeslachtDier": {
+      "type": "string",
+      "description": "Geslacht van het afgeschoten dier",
+      "examples": ["MNNLJK"]
+    },
+    "Status": {
+      "type": "string",
+      "description": "Verwerkingsstatus van de melding",
+      "examples": ["INGEDIEND"]
+    },
+    "AantalEmbryos": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "Aantal embryo's; verplicht als IsAantalEmbryosBekend = true en GeslachtDier = VRWLJK",
+      "examples": [null]
+    },
+    "IsAantalEmbryosBekend": {
+      "type": "boolean",
+      "description": "Geeft aan of het aantal embryo's bepaald werd",
+      "examples": [false]
+    },
+    "LeegGewicht": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Gewicht van het dier zonder ingewanden (kg)",
+      "examples": [45.0]
+    },
+    "VolGewicht": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Gewicht van het dier met ingewanden (kg); moet >= LeegGewicht zijn",
+      "examples": [45.0]
+    },
+    "LengteOnderkaak": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Lengte van de onderkaak in cm",
+      "examples": [null]
+    },
+    "LocatiePrecisieType": {
+      "type": "string",
+      "description": "Nauwkeurigheid van de opgegeven locatie",
+      "examples": ["Radius van 250m"]
+    },
+    "WKT": {
+      "type": "string",
+      "pattern": "^(POINT|LINESTRING|LINEARRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)(\\s+(Z|M|ZM))?\\s*(\\([\\s\\S]*\\)|EMPTY)$",
+      "description": "Locatiepolygoon in Well-Known Text (WKT) formaat; coördinaten in Lambert 72 (EPSG:31370)",
+      "examples": ["POLYGON ((166293.13 162569.95, ..., 166293.13 162569.95))"]
+    },
+    "GeoJson": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Locatie als geserialiseerde GeoJSON Feature-string (EPSG:31370)",
+      "examples": ["{\"type\":\"Feature\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[...]]},\"properties\":{}}"]
+    },
+    "Beschrijving": {
+      "type": "string",
+      "description": "Vrije tekst / opmerkingen bij de melding (mag leeg zijn)",
+      "examples": [""]
+    },
+    "BestrijdingActies": {
+      "type": "array",
+      "description": "Lijst van gebruikte bestrijdings- of jachtmethoden",
+      "examples": [["GEWEER"]]
+    }
+
+  },
+  "required": [
+    "MeldingGuid",
+    "MeldingAfschotId",
+    "Jaartal",
+    "OndertekenaarAchternaam",
+    "OndertekenaarVoornaam",
+    "OndertekeningsDatum",
+    "Ondertekend",
+    "AfschotPlanNummer",
+    "JachtMehtode",
+    "WettelijkKader",
+    "MeldingAfschotDier",
+    "Datum",
+    "Tijdstip",
+    "PostCode",
+    "GemeenteNisCodes",
+    "LabelNummer",
+    "AantalDieren",
+    "LeeftijdDier",
+    "GeslachtDier",
+    "Status",
+    "IsAantalEmbryosBekend",
+    "LeegGewicht",
+    "VolGewicht",
+    "LocatiePrecisieType",
+    "WKT",
+    "GeoJson",
+    "BestrijdingActies"
+  ],
+  "if": {
+    "properties": {
+      "Ondertekend": { "const": true }
+    }
+  },
+  "then": {
+    "properties": {
+      "OndertekeningsDatum": { "type": "string", "format": "date-time" }
+    },
+    "required": ["OndertekeningsDatum"]
+  }
+}
