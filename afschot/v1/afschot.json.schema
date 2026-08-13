@@ -49,9 +49,9 @@
       "description": "Geeft aan of de melding ondertekend is",
       "examples": [true]
     },
-    "JachtMehtode": {
+    "JachtMethode": {
       "type": "string",
-      "description": "Manier waarop gejaagd wordt (veldnaam bevat typfout: 'Mehtode' i.p.v. 'Methode')",
+      "description": "Manier waarop gejaagd wordt (typfout veldnaam gecorrigeerd)",
       "examples": ["DRUKJACHT"]
     },
     "AfschotPlanNummer": {
@@ -108,6 +108,10 @@
       "pattern": "^ANB \\d{4} [A-Z ]+ \\d+$",
       "description": "Labelnummer toegewezen aan het dier door ANB",
       "examples": ["ANB 2025 WILD ZWIJN 999999"]
+    },
+    "LabelGescand": {
+      "type": "boolean",
+      "description": "Geeft aan of het label gescand werd (indien niet, werd het manueel ingegeven)"
     },
     "AantalDieren": {
       "type": ["integer", "null"],
