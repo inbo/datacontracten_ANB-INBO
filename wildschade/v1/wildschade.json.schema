@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "github url",
+  "$id": "https://github.com/inbo/datacontracten_ANB-INBO/wildschade/v1/wildschade.schema.json",
   "title": "Schademelding",
   "description": "Eén genest object met de melding van de burger en latere eventuele beslissing schadevergoeding in plaats van meerdere losgekoppelde arrays",
   "type": "object",
