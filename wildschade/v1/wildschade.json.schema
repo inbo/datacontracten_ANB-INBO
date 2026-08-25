@@ -141,7 +141,7 @@
             "null"
           ],
           "format": "date-time",
-          "description": "Datum waarop de schade vermoedelijk werd veroorzaakt door het wild."
+          "description": "Datum waarop de schade vermoedelijk werd veroorzaakt door de wilde dieren."
         },
         "SchadeBedragId": {
           "type": "string",
@@ -341,7 +341,7 @@
         },
         "VeroorzakendeDieren": {
           "type": "array",
-          "description": "Lijst van wildsoorten die de schade hebben veroorzaakt.",
+          "description": "Lijst van soorten wilde dieren die de schade vermoedelijk hebben veroorzaakt.",
           "minItems": 1,
           "items": {
             "type": "object",
@@ -353,11 +353,11 @@
             "properties": {
               "Type": {
                 "type": "string",
-                "description": "Usercode voor de wildsoort"
+                "description": "Usercode voor de soort wilde dieren die vermoedelijk schade veroorzaakten"
               },
               "TypeDescription": {
                 "type": "string",
-                "description": "Omschrijving van de usercode voor de wildsoort"
+                "description": "Omschrijving van de usercode voor de soort wilde dieren die vermoedelijk schade veroorzaakten"
               },
               "SubschadeType": {
                 "type": "array",
