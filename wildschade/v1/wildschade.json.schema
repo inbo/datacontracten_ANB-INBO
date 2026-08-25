@@ -1,0 +1,665 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/inbo/datacontracten_ANB-INBO/wildschade/v1/wildschade.schema.json",
+  "title": "Schademelding",
+  "description": "Eén genest object met de melding van de burger en latere eventuele beslissing schadevergoeding in plaats van meerdere losgekoppelde arrays",
+  "type": "object",
+  "required": [
+    "Id",
+    "Aanvrager",
+    "Indiener",
+    "Schade",
+    "PreventieMaatregelen",
+    "Status",
+    "LaatsteWijzigingDatum",
+    "Version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unieke identifier van deze indiening. Gedeeld over alle blokken in de brondata."
+    },
+    "Version": {
+      "type": "string",
+      "description": "Versienummer van het datacontract waarmee deze schademelding werd aangemaakt of voor het laatst bijgewerkt (bv. 1.0.0)."
+    },
+    "LaatsteWijzigingDatumDossier": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Datum en tijdstip waarop het dossier van de schadeclaim voor het laatst werd gewijzigd, door de indiener of een backofficemedewerker."
+    },
+    "Status": {
+      "type": "string",
+      "enum": [
+        "InBehandeling",
+        "Voorlopig",
+        "Onontvankelijk",
+        "Goedgekeurd",
+        "Afgekeurd",
+        "Duplicaat",
+        "Nieuw",
+        "InBeroep"
+      ],
+      "description": "Huidige status van de schademelding. InBehandeling = melding wordt actief behandeld door backoffice; Voorlopig = nog niet ingediend, kan nog aangepast worden door de burger; Onontvankelijk = melding voldoet niet aan de ontvankelijkheidsvoorwaarden; Goedgekeurd = melding goedgekeurd; Afgekeurd = melding niet weerhouden; Duplicaat = melding is een duplicaat van een bestaand dossier; Nieuw = ingediend maar nog niet behandeld door backoffice; InBeroep = aanvrager heeft beroep aangetekend tegen de beslissing."
+    },
+    "DatumStatus": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Datum en tijdstip waarop de status van het dossier werd aangepast."
+    },
+    "Aanvrager": {
+      "type": "object",
+      "description": "Juridische hoedanigheid en identiteit van de persoon of entiteit die recht heeft op vergoeding.",
+      "required": [
+        "Hoedanigheid",
+        "HashedIdentifier"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "Hoedanigheid": {
+          "type": "string",
+          "description": "Rol van de aanvrager tegenover de eigendom waar schade aan geleden is (bv: pachter, eigenaar, etc)"
+        },
+        "HashedIdentifier": {
+          "type": "string",
+          "description": "Gehashte unieke identifier van de aanvrager, gebruikt om de aanvrager te identificeren zonder de onderliggende persoonsgegevens bloot te leggen."
+        },
+        "Firma": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Firmanaam indien de aanvrager een bedrijf is"
+        },
+        "BTWNummer": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "BTW-identificatienummer (indien de aanvrager een bedrijf is)."
+        }
+      }
+    },
+    "Indiener": {
+      "type": "object",
+      "description": "Contactpersoon die de aanvraag effectief indient, met contactgegevens en woonadres.",
+      "required": [
+        "HashedIdentifier"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "HashedIdentifier": {
+          "type": "string",
+          "description": "Gehashte unieke identifier van de indiener, gebruikt om de indiener te identificeren zonder de onderliggende persoonsgegevens bloot te leggen."
+        },
+        "NaamOrganisatie": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Naam van de organisatie indien de indiener namens een organisatie handelt."
+        }
+      }
+    },
+    "Schade": {
+      "type": "object",
+      "description": "Alle gegevens over de schade: type, timing, bedrag, betrokken dieren, locaties en eventuele letsels.",
+      "required": [
+        "SchadeType",
+        "DatumVaststelling",
+        "DatumVeroorzaakt",
+        "SchadeBedragId",
+        "VeroorzakendeDieren",
+        "GeteisterdeDieren",
+        "Ongeval",
+        "Locaties",
+        "KomtInAanmerkingVoorSchadevergoeding"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "SchadeType": {
+          "type": "string",
+          "description": "ANB categorie van de schade."
+        },
+        "SchadeTypeINBO": {
+          "type": "string",
+          "description": "INBO categorie van de schade."
+        },
+        "DatumVaststelling": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "Datum waarop de schade werd vastgesteld."
+        },
+        "DatumVeroorzaakt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "Datum waarop de schade vermoedelijk werd veroorzaakt door de wilde dieren."
+        },
+        "SchadeBedragId": {
+          "type": "string",
+          "description": "Categoriecode voor het geschatte schadebedrag (bv. BEDRAG1000, BEDRAGNA)."
+        },
+        "KomtInAanmerkingVoorSchadevergoeding": {
+          "type": "boolean",
+          "description": "Geeft aan of de applicatie inschat dat de melding in aanmerking komt voor schadevergoeding. Let wel, dit is geen garantie dat er ook een schadevergoeding zal volgen."
+        },
+        "BeschrijvingSchade": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Vrije beschrijving van de aard en omvang van de schade."
+        },
+        "SchadeReedsHersteld": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Geeft aan of de schade reeds hersteld is op moment van indiening. IS ALTIJD NULL VANDAAG???"
+        },
+        "SchadeAndereOmschrijving": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Aanvullende omschrijving"
+        },
+        "PlantSoort": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Getroffen plantensoort of gewas"
+        },
+        "GeteisterdeDieren": {
+          "type": "array",
+          "description": "Lijst van individuele dieren van de aanvrager die schade hebben geleden.",
+          "items": {
+            "type": "object",
+            "required": [
+              "Leeftijd",
+              "SoortVee"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "Ras": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Ras of soortomschrijving van het dier (bv. melkgeit, Vlaams Schaap)."
+              },
+              "SoortVee": {
+                "type": "string",
+                "description": "Usercode voor de veecategorie (bv. SCHAAP, GEIT)"
+              },
+              "SoortVeeDescription": {
+                "type": "string",
+                "description": "Omschrijving van de Usercode voor de veecategorie"
+              },
+              "Leeftijd": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Leeftijd van het dier in jaren."
+              },
+              "Geslacht": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Geslacht van het dier of null indien onbekend."
+              },
+              "Conditie": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Conditie van het dier vóór de schadeveroorzaking (bv. goed, matig)."
+              },
+              "AanvullendeInformatie": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Aanvullende vrije informatie over dit dier."
+              }
+            }
+          }
+        },
+        "Ongeval": {
+          "type": "object",
+          "description": "Informatie over eventuele lichamelijke letsels bij het schadegeval.",
+          "required": [
+            "HasLichamelijkeLetsels"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "HasLichamelijkeLetsels": {
+              "type": "boolean",
+              "description": "True indien er lichamelijke letsels zijn bij het schadegeval."
+            },
+            "AantalLichamelijke": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "description": "Aantal personen met een lichamelijk letsel."
+            },
+            "AantalDodelijke": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "description": "Aantal dodelijke slachtoffers."
+            }
+          }
+        },
+        "Locaties": {
+          "type": "array",
+          "description": "Lijst van percelen of locaties waar de schade werd vastgesteld.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "NISCode",
+              "LocatieTypeID",
+              "IndieningLocatieTypeID"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "NISCode": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "NIS-gemeentecode van de locatie (bv. 44008)."
+              },
+              "LocatieTypeID": {
+                "type": "string",
+                "enum": [
+                  "GEOMPOLY",
+                  "GEOMPUNT"
+                ],
+                "description": "Type geometrie: polygoon (GEOMPOLY) of punt (GEOMPUNT)."
+              },
+              "IndieningLocatieTypeID": {
+                "type": "string",
+                "description": "Methode waarmee de locatie werd geselecteerd"
+              },
+              "Beschrijving": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Vrije omschrijving van de locatie."
+              },
+              "LocatieGeometriePunt": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Puntgeometrie als WKT (enkel bij LocatieTypeID = GEOMPUNT)."
+              },
+              "LocatieGeometriePoly": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "Capakey",
+                      "WKT"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "Capakey": {
+                        "type": "string",
+                        "description": "Cadastrale perceelsleutel (bv. 44008E0700/00F000)."
+                      },
+                      "WKT": {
+                        "type": "string",
+                        "description": "Well-Known Text polygoon in Belgische Lambertcoördinaten."
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Polygoongeometrie (enkel bij LocatieTypeID = GEOMPOLY)."
+              }
+            }
+          }
+        },
+        "VeroorzakendeDieren": {
+          "type": "array",
+          "description": "Lijst van soorten wilde dieren die de schade vermoedelijk hebben veroorzaakt.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "Type",
+              "SubschadeType"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "Type": {
+                "type": "string",
+                "description": "Usercode voor de soort wilde dieren die vermoedelijk schade veroorzaakten"
+              },
+              "TypeDescription": {
+                "type": "string",
+                "description": "Omschrijving van de usercode voor de soort wilde dieren die vermoedelijk schade veroorzaakten"
+              },
+              "SubschadeType": {
+                "type": "array",
+                "description": "Subcategorieën van de schade door deze soort (kan leeg zijn).",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "PreventieMaatregelen": {
+      "type": "array",
+      "description": "Lijst van preventieve maatregelen die de aanvrager vóór de schade heeft genomen.",
+      "items": {
+        "type": "object",
+        "required": [
+          "PreventieveMaatregelId",
+          "PreventieveMaatregelUserCodeId",
+          "DatumPreventieveMaatregel"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "PreventieveMaatregelUserCodeId": {
+            "type": "string",
+            "description": "Usercode van de maatregel (bv. ANDEREMAATREGEL)."
+          },
+          "PreventieveMaatregelUserCodeDescription": {
+            "type": "string",
+            "description": "Omschrijving van de usercode van de maatregel"
+          },
+          "DatumPreventieveMaatregel": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Datum waarop de maatregel werd genomen of geplaatst."
+          },
+          "BeschrijvingPreventieveMaatregel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Tekstuele toelichting bij de maatregel."
+          }
+        }
+      }
+    },
+    "Schadevergoeding": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Uitbetalingsgegevens van de toegekende schadevergoeding. Null zolang er nog geen vergoeding is toegekend.",
+      "required": [
+        "UitbetalingId",
+        "BrutoBedrag",
+        "EigenRisico",
+        "NettoBedrag",
+        "ToegekendeSchadeVergoeding",
+        "UitbetalingUitgevoerdOp",
+        "LaatsteWijzigingDatum"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "UitbetalingId": {
+          "type": "integer",
+          "description": "Uniek intern identifier van de uitbetaling."
+        },
+        "AangepastBedrag": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Bedrag na eventuele aanpassing door de backofficemedewerker."
+        },
+        "BrutoBedrag": {
+          "type": "number",
+          "description": "Bruto schadebedrag vóór aftrek van eigen risico of aanpassingen."
+        },
+        "EigenRisico": {
+          "type": "number",
+          "description": "Eigen risico dat in mindering wordt gebracht op het bruto bedrag."
+        },
+        "NettoBedrag": {
+          "type": "number",
+          "description": "Netto uit te betalen bedrag na aftrek van eigen risico (BrutoBedrag - EigenRisico)."
+        },
+        "ToegekendeSchadeVergoeding": {
+          "type": "number",
+          "description": "Definitief toegekend en uit te betalen schadevergoedingsbedrag."
+        },
+        "RedenAanpassing": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Motivering van de backofficemedewerker indien het bedrag werd aangepast. Null indien geen aanpassing."
+        },
+        "UitbetalingUitgevoerdOp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Datum en tijdstip waarop de uitbetaling werd uitgevoerd."
+        },
+        "LaatsteWijzigingDatum": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Datum en tijdstip waarop de schadevergoeding voor het laatst werd gewijzigd."
+        }
+      }
+    },
+    "Eindbeslissing": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Eindbeslissing van de backofficemedewerker over de schademelding. Null zolang nog geen eindbeslissing genomen is.",
+      "required": [
+        "EindbeslissingId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "EindbeslissingId": {
+          "type": "integer",
+          "description": "Uniek intern identifier van de eindbeslissing."
+        },
+        "InterneMotivatie": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Interne motivatie van de backofficemedewerker bij de eindbeslissing."
+        },
+        "Bewijslast": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Er kan aan de hand van sporen niet aangetoond worden dat de schade werd veroorzaakt door een desbetreffende soort."
+        },
+        "PreventieveMaatregelen": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "De preventieve maatregelen werden niet genomen zoals voorgeschreven in de Code Goede Praktijk."
+        },
+        "Hersteld": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Het gewas werd reeds geoogst of de schade werd hersteld alvorens een dossierbehandelaar ter plaatse kwam."
+        },
+        "ResNullius": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Indien de schade werd veroorzaakt door jachtwild en bejaging of bestrijding kon uitgevoerd worden."
+        },
+        "Schadebedrag": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Schadebedrag is kleiner dan 300 euro."
+        },
+        "TermijnenOverschreden": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "De schade werd niet binnen redelijke termijn vastgesteld of de aanvraag werd niet binnen de voorziene termijn ingediend."
+        },
+        "GeenLandbouwnummer": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "De schadelijder beschikt niet over een landbouwnummer in geval van schade aan professioneel geteelde gewassen."
+        },
+        "GeenCasuaalVerband": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Oorzaak-gevolg kan niet worden aangetoond."
+        },
+        "SchadesoortWeerlegd": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Schade wordt toegeschreven aan een andere soort. Enkel mogelijk na 'bewijslast'."
+        },
+        "Andere": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Maakt het vrij invulveld beschikbaar in de applicatie."
+        },
+        "IsNietCorrectGeregistreerd": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "De schademelding werd niet correct geregistreerd."
+        },
+        "IsVervolgschade": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Schade die niet direct voortvloeit uit het incident zelf, maar als indirect gevolg daarvan optreedt."
+        },
+        "OpmerkingBewijslast": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Toelichting bij de bewijslastbeslissing."
+        },
+        "OpmerkingPreventieveMaatregelen": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Toelichting bij de beoordeling van preventieve maatregelen."
+        },
+        "OpmerkingHersteld": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Toelichting bij de vaststelling dat schade reeds hersteld was."
+        },
+        "OpmerkingResNullius": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Toelichting bij de toepassing van het res nullius-principe."
+        },
+        "OpmerkingSchadebedrag": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Toelichting bij de betwisting van het schadebedrag."
+        },
+        "OpmerkingTermijnenOverschreden": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Toelichting bij de overschrijding van de indieningstermijnen."
+        },
+        "OpmerkingGeenLandbouwnummer": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Toelichting bij het ontbreken van een geldig landbouwnummer."
+        },
+        "OpmerkingVervolgschade": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Toelichting bij de beoordeling als vervolgschade."
+        },
+        "OpmerkingGeenCausaalVerband": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Toelichting bij het ontbreken van causaal verband."
+        },
+        "OpmerkingSchadeSoortWeerlegd": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Toelichting bij het weerleggen van de schadesoort."
+        },
+        "OpmerkingAndere": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Toelichting bij de andere reden."
+        },
+        "OpmerkingNietCorrectGeregistreerd": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Toelichting bij de niet-correcte registratie."
+        }
+      }
+    }
+  }
+}
